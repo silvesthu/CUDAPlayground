@@ -18,4 +18,5 @@ endif()
 
 # CUDA
 enable_language(CUDA)
+set(CMAKE_CUDA_ARCHITECTURES "native")
 # set(CMAKE_CUDA_SEPARABLE_COMPILATION ON)
