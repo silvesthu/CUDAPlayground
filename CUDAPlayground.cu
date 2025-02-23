@@ -9,8 +9,10 @@
 //	Optimizing Parallel Reduction in CUDA https://cuvilib.com/Reduction.pdf
 //
 
+#ifdef __INTELLISENSE__
+#define __CUDACC__
 #include <cuda_runtime.h>						// Syntax highlight for CUDA keywords
-#include <device_launch_parameters.h>			// Syntax highlight for __launch_bounds__, blockDim, gridDim, etc.
+#endif // __INTELLISENSE__
 
 #include <mma.h>								// WMMA API (Tensor Cores), also requires Code Generation >= compute_70,sm_70 (Volta)
 
