@@ -9,9 +9,12 @@
 //	Optimizing Parallel Reduction in CUDA https://cuvilib.com/Reduction.pdf
 //
 
-#include <iostream>
+#include <cuda_runtime.h>						// Main CUDA runtime API
+#include <device_launch_parameters.h>			// Required for __launch_bounds__, blockDim, gridDim, etc.
 
-__global__ void cuda_hello() 
+#include <stdio.h>
+
+__global__ void cuda_hello_world() 
 {
 	// Grid -> Block -> Thread
 	int block_size = blockDim.x * blockDim.y * blockDim.z;
@@ -30,9 +33,9 @@ __global__ void cuda_hello()
 
 int main()
 {
-	dim3 grid_size(1, 1, 1);
-	dim3 block_size(8, 4, 1);
-	cuda_hello<<<grid_size, block_size>>>();
+	dim3 grid_size(1, 1, 1);					// Dispatch in HLSL
+	dim3 block_size(8, 4, 1);					// ThreadGroup in HLSL 
+	cuda_hello_world<<<grid_size, block_size>>>();
 
 	return 0;
 }
