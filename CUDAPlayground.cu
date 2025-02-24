@@ -1,15 +1,19 @@
-﻿// CUDAPlayground
+﻿//	CUDAPlayground
 // 
-// Tutorial
-//	Programming Guide https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
-//  Warp Functions https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-vote-functions
-//  Warp Matrix https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=cooperative%2520matrix#warp-matrix-functions
-//      Tensor Cores https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/
+//	Documents
+//		Programming Guide https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html
+//			Warp Functions https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html#warp-vote-functions
+//		Tensor Cores
+//			Introduction https://developer.nvidia.com/blog/programming-tensor-cores-cuda-9/
+//			Programming Guide https://docs.nvidia.com/cuda/cuda-c-programming-guide/index.html?highlight=cooperative%2520matrix#warp-matrix-functions
+//		Optix
+//			Programming Guide https://raytracing-docs.nvidia.com/optix9/guide/index.html
 //
-// Sample
-//	CUDA Samples https://github.com/NVIDIA/cuda-samples
-//	Optimizing Parallel Reduction in CUDA https://cuvilib.com/Reduction.pdf
-//
+//	Sample
+//		CUDA Samples https://github.com/NVIDIA/cuda-samples
+//		Optix Samples https://github.com/nvpro-samples/optix_advanced_samples/blob/master/src/optixIntroduction/README.md
+//		Optimization
+//			Optimizing Parallel Reduction in CUDA https://cuvilib.com/Reduction.pdf
 
 #include "HelloCUDA.h"
 #include "HelloWMMA.h"
