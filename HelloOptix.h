@@ -116,10 +116,10 @@ namespace HelloOptix
         {
             OptixProgramGroupOptions program_group_options = {}; // Initialize to zeros
 
-            OptixProgramGroupDesc raygen_prog_group_desc = {}; //
+            OptixProgramGroupDesc raygen_prog_group_desc = {};
             raygen_prog_group_desc.kind = OPTIX_PROGRAM_GROUP_KIND_RAYGEN;
             raygen_prog_group_desc.raygen.module = module;
-            raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__draw_solid_color";
+            raygen_prog_group_desc.raygen.entryFunctionName = "__raygen__HelloOptix";
             OPTIX_CHECK(optixProgramGroupCreate(
                 context,
                 &raygen_prog_group_desc,
@@ -221,44 +221,41 @@ namespace HelloOptix
         //
         // launch
         //
-        float4* output_device = nullptr;
+        CUdeviceptr output_image_device = {};
         {
             CUstream stream;
             CUDA_CHECK(cudaStreamCreate(&stream));
 
-            CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&output_device), cWidth * cHeight * sizeof(float4)));
-            Params params;
-            params.image = output_device;
-            params.image_width = cWidth;
+            CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&output_image_device), cWidth * cHeight * sizeof(float4)));
+            Params params_host;
+            params_host.image = reinterpret_cast<float4*>(output_image_device);
+            params_host.image_width = cWidth;
+            params_host.image_height = cHeight;
 
-            CUdeviceptr d_param;
-            CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&d_param), sizeof(Params)));
-            CUDA_CHECK(cudaMemcpy(
-                reinterpret_cast<void*>(d_param),
-                &params, sizeof(params),
-                cudaMemcpyHostToDevice
-            ));
+            CUdeviceptr params_device;
+            CUDA_CHECK(cudaMalloc(reinterpret_cast<void**>(&params_device), sizeof(Params)));
+            CUDA_CHECK(cudaMemcpy(reinterpret_cast<void*>(params_device), &params_host, sizeof(params_host), cudaMemcpyHostToDevice));
 
-            OPTIX_CHECK(optixLaunch(pipeline, stream, d_param, sizeof(Params), &sbt, cWidth, cHeight, /*depth=*/1));
+            OPTIX_CHECK(optixLaunch(pipeline, stream, params_device, sizeof(Params), &sbt, cWidth, cHeight, /*depth=*/1));
             CUDA_CHECK(cudaDeviceSynchronize());
-            CUDA_CHECK(cudaFree(reinterpret_cast<void*>(d_param)));
+            CUDA_CHECK(cudaFree(reinterpret_cast<void*>(params_device)));
         }
 
         //
         // Output
         //
         {
-            std::vector<float4> output_host;
-            output_host.resize(cWidth * cHeight);
+            std::vector<float4> output_image_host;
+            output_image_host.resize(cWidth * cHeight);
 
-            CUDA_CHECK(cudaMemcpy(output_host.data(), output_device, output_host.size() * sizeof(float4), cudaMemcpyDeviceToHost));
+            CUDA_CHECK(cudaMemcpy(output_image_host.data(), reinterpret_cast<void*>(output_image_device), output_image_host.size() * sizeof(float4), cudaMemcpyDeviceToHost));
 
             printf("Output = \n");
             for (int h = 0; h < cHeight; h++)
             {
                 for (int w = 0; w < cWidth; w++)
                 {
-                    float4 data = output_host[h * cWidth + w];
+                    float4 data = output_image_host[h * cWidth + w];
                     printf("(%.2f %.2f %.2f %.2f), ", data.x, data.y, data.z, data.w);
                 }
                 printf("\n");
@@ -269,7 +266,7 @@ namespace HelloOptix
         // Cleanup
         //
         {
-            CUDA_CHECK(cudaFree(reinterpret_cast<void*>(output_device)));
+            CUDA_CHECK(cudaFree(reinterpret_cast<void*>(output_image_device)));
 
             CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.raygenRecord)));
             CUDA_CHECK(cudaFree(reinterpret_cast<void*>(sbt.missRecordBase)));

@@ -10,7 +10,7 @@ extern "C"
 }
 
 extern "C"
-__global__ void __raygen__draw_solid_color()
+__global__ void __raygen__HelloOptix()          // prefix __raygen__ is necessary as semantic type
 {
     uint3 launch_index                          = optixGetLaunchIndex();
     RayGenData* rtData                          = (RayGenData*)optixGetSbtDataPointer();
