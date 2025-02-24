@@ -11,13 +11,15 @@
 //	Optimizing Parallel Reduction in CUDA https://cuvilib.com/Reduction.pdf
 //
 
-#include "HelloWorld.h"
-#include "WMMA.h"
+#include "HelloCUDA.h"
+#include "HelloWMMA.h"
+#include "HelloOptix.h"
 
 int main()
 {
-    HelloWorld();
-	WMMA();
+    HelloCUDA::Run();
+	HelloWMMA::Run();
+	HelloOptix::Run();
 
 	return 0;
 }

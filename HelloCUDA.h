@@ -1,6 +1,6 @@
 ﻿#include "Common.h"
 
-namespace SampleHelloWorld
+namespace HelloCUDA
 {
 	__global__ void cuda_hello_world()
 	{
@@ -18,16 +18,16 @@ namespace SampleHelloWorld
 			blockIdx.x, blockIdx.y, blockIdx.z, gridDim.x, gridDim.y, gridDim.z,
 			threadIdx.x, threadIdx.y, threadIdx.z, blockDim.x, blockDim.y, blockDim.z);
 	}
-}
 
-void HelloWorld()
-{
-	using namespace SampleHelloWorld;
+	void Run()
+	{
+		printf("** HelloCUDA **\n\n");
 
-	dim3 grid_size(1, 1, 1);					// Dispatch in HLSL
-	dim3 block_size(8, 4, 1);					// ThreadGroup in HLSL 
-	cuda_hello_world<<<grid_size, block_size>>>();
+		dim3 grid_size(1, 1, 1);				// Dispatch in HLSL
+		dim3 block_size(8, 4, 1);				// ThreadGroup in HLSL 
+		cuda_hello_world<<<grid_size, block_size>>>();
 
-	CHECK_CUDA(cudaDeviceSynchronize());		// Wait for execution
-	printf("\n");
+		CUDA_CHECK(cudaDeviceSynchronize());	// Wait for execution
+		printf("\n");
+	}
 }
