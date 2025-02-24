@@ -82,6 +82,11 @@
   <ItemGroup>
     <CudaCompile Include="CUDAPlayground.cu" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Common.h" />
+    <ClInclude Include="HelloWorld.h" />
+    <ClInclude Include="WMMA.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 12.8.targets" />
